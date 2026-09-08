@@ -13,6 +13,12 @@ services:
     ports:
       - "3000:3000"
 
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+    command: npm run dev
+
 # Aqui ele já constroi uma imagem baseada nas imagens prontas do dockerHub, no caso a imagem do postgres:16.
 # Especifica algumas variáveis de ambiente que possivelmente serão usabas pra entrar no postgres. 
 # Mapeia as portas também. 
