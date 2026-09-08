@@ -10,9 +10,18 @@ const createUserSchema = z.object(
 
 const updateUserSchema = z.object(
     {
-        name: z.string().min(),
-        email: z.email(), 
-        password: z.string().min(6)
+        newName: z.string().min(),
+        newEmail: z.email(), 
+        newPassword: z.string().min(6)
     }
-)
-module.exports = {createUserSchema, updateUserSchema}; 
+); 
+
+const loginUserValidator = z.object(
+    {
+        email: z.email(), 
+        password: z.string().min(6),
+    }
+); 
+
+
+module.exports = {createUserSchema, updateUserSchema, loginUserValidator}; 
