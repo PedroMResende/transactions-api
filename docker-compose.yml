@@ -1,0 +1,39 @@
+services:
+
+# Sobe uma imagem baseada no diretorio que eu to rodando o comando.
+# com o nome transactions-api. 
+# e só vai parar se eu mandar. 
+  api:
+    build: .
+    container_name: transactions-api
+    restart: unless-stopped
+
+# faz um tunel entre a porta 3000 do meu servidor local, pra porta 3000 do container. Mapeia as portas. 
+# é a 3000 porque lá na construção da imagem eu coloquei o expose 3000, ele deixa essa porta esposta pra acessarem esse container
+    ports:
+      - "3000:3000"
+
+# Aqui ele já constroi uma imagem baseada nas imagens prontas do dockerHub, no caso a imagem do postgres:16.
+# Especifica algumas variáveis de ambiente que possivelmente serão usabas pra entrar no postgres. 
+# Mapeia as portas também. 
+  postgres:
+    image: postgres:16
+    container_name: transactions-postgres
+    restart: unless-stopped
+
+    environment: 
+      POSTGRES_USER: postgres
+
+      POSTGRES_PASSWORD: postgres
+
+      POSTGRES_DB: transactions
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+volumes:
+  
+  postgres_data:
