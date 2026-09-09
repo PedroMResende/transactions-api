@@ -7,6 +7,7 @@ const app = express();
 
 const usersRouter = require('./routes/usersRouter'); 
 const authRouter = require('./routes/authRouter'); 
+const accountsRouter = require('./routes/accountsRouter'); 
 
 
 app.use(logger('dev'));
@@ -15,5 +16,6 @@ app.use(cookieParser());
 
 app.use('/users', usersRouter); 
 app.use('/auth', authRouter); 
+app.use('/accounts', accountsRouter)
 
 module.exports = app;
