@@ -25,6 +25,9 @@ function authorizedRoles(request, response, next) {
     }; 
 
     next(); 
-}
+};
+
+
+
 
 module.exports = {authorizedRoles, justAdminRoles}
