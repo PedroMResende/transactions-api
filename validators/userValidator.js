@@ -10,9 +10,8 @@ const createUserSchema = z.object(
 
 const updateUserSchema = z.object(
     {
-        newName: z.string().min(),
-        newEmail: z.email(), 
-        newPassword: z.string().min(6)
+        name: z.string().min(3),
+        email: z.email(), 
     }
 ); 
 

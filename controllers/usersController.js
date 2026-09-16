@@ -33,6 +33,14 @@ async function createUser(request, response) {
 
         return response.status(201).json(userCreated.rows[0]);
     } catch (err) {
+        
+        if(err.code === '23505') { 
+            return response.status(409).json(
+                {
+                    msg: 'Usuário já cadastrado'
+                }
+            )
+        }
         console.error(err); 
 
         return response.status(500).json({msg: 'Erro interno na API'});
@@ -73,21 +81,19 @@ async function updateUser(request, response) {
     try {
         
         
-        const {newName, newEmail, newPassword} = request.body; 
+        const {name, email} = request.body; 
 
-        const newHashedPassword = await bcrypt.hash(newPassword, 10); 
 
         const updatedUser = await pool.query(
             `
             UPDATE users
             SET 
                 name = $1, 
-                email = $2, 
-                password = $3
-            WHERE id = $4
+                email = $2
+            WHERE id = $3
             RETURNING id, name, email
             `,
-            [newName, newEmail, newHashedPassword, request.user.id]
+            [name, email,  request.user.id]
         )
 
         return response.status(200).json(updatedUser.rows[0]);
