@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www",
+    "dev": "nodemon -e yaml,js ./bin/www",
     "test": "jest --watchAll --runInBand"
   },
   "dependencies": {
@@ -17,6 +17,8 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "~1.9.1",
     "pg": "^8.23.0",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.9.1",
     "zod": "^4.5.4"
   },
   "devDependencies": {

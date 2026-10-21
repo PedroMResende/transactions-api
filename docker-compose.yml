@@ -1,3 +1,5 @@
+# Cada serviço é um container que vai subir 
+
 services:
 
 # Sobe uma imagem baseada no diretorio que eu to rodando o comando.
@@ -9,7 +11,7 @@ services:
     restart: unless-stopped
 
 # faz um tunel entre a porta 3000 do meu servidor local, pra porta 3000 do container. Mapeia as portas. 
-# é a 3000 porque lá na construção da imagem eu coloquei o expose 3000, ele deixa essa porta esposta pra acessarem esse container
+# é a 3000 porque lá na construção da imagem eu coloquei o expose 3000, ele deixa essa porta exposta pra acessarem esse container
     ports:
       - "3000:3000"
 
@@ -36,7 +38,7 @@ services:
 
     ports:
       - "5432:5432"
-
+# Permite com que o Container permaneça com os arquivos que foram criados. 
     volumes:
       - postgres_data:/var/lib/postgresql/data
   

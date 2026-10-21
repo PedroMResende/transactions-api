@@ -382,8 +382,11 @@ describe('USERS ROUTER TEST', () => {
 
         expect(response.status).toBe(200);
         expect(response.headers['content-type']).toMatch(/json/); 
+        expect(response.body.role).toBe('user');
         expect(response.body.name).toBe('João das Neves atualizado'); 
         expect(response.body.email).toBe('joaodasnevesatualizado@email.com.br');
+        expect(response.body.created_at).toBeDefined();
+        expect(response.body.updated_at).toBeDefined(); 
     }); 
 
     test('PUT /users/:id (USER TRY ACCESS OTHER ACCOUNT |SHOULD RETURNS 403', async() => { 
@@ -410,6 +413,8 @@ describe('USERS ROUTER TEST', () => {
         expect(response.headers['content-type']).toMatch(/json/);
         expect(response.body.name).toBe('João das Neves Atualizado por Admin'); 
         expect(response.body.email).toBe('joaodasnevesatualizadoporadmin@email.com.br')
+        expect(response.body.created_at).toBeDefined(); 
+        expect(response.body.updated_at).toBeDefined(); 
     });
 
     test('PUT /users/:id (INEXISTENT ID) |SHOULD RETURNS 404', async() => { 
