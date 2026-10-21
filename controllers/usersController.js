@@ -6,7 +6,7 @@ const pool = require('../database/connection');
 
 async function getUsers(request,response) {
     try {
-        const result = await pool.query('SELECT id, name, email, role, created_at FROM users'); 
+        const result = await pool.query('SELECT id, name, email, role, created_at, updated_at FROM users'); 
 
         return response.status(200).json(result.rows);
     } catch (err) {
@@ -26,7 +26,7 @@ async function createUser(request, response) {
             `
             INSERT INTO users(name, email, password)
             VALUES ($1, $2, $3)
-            RETURNING id, name, email, created_at
+            RETURNING id, name, email, role, created_at, updated_at
             `,
             [name, email, hashedPassword]
         )
@@ -53,7 +53,7 @@ async function getUserById(request, response, next) {
 
         const userFounded = await pool.query(
             `
-            SELECT id, name, email, role, created_at 
+            SELECT id, name, email, role, created_at, updated_at
             FROM users
             WHERE id = $1
             `, 
@@ -89,9 +89,10 @@ async function updateUser(request, response) {
             UPDATE users
             SET 
                 name = $1, 
-                email = $2
+                email = $2,
+                updated_at = CURRENT_TIMESTAMP
             WHERE id = $3
-            RETURNING id, name, email
+            RETURNING id, name, email, role, created_at, updated_at
             `,
             [name, email,  request.user.id]
         )

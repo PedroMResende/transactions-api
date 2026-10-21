@@ -1,0 +1,1037 @@
+openapi: 3.1.1
+
+info:
+  title: Transactions API
+  description: REST API for managing accounts and financial transactions. Developed as a learning project focused on backend development, SQL, and PostgreSQL.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+tags:
+  - name: Auth
+    description: Authentication and token management
+
+  - name: Users
+    description: User management
+
+  - name: Accounts
+    description: Account management
+
+  - name: Transactions
+    description: Deposits, withdrawals, transfers, and transaction history
+
+paths:
+  /users: 
+    post:
+      tags:
+        - Users
+      summary: Create a user 
+      description: Creates a new User account 
+      operationId: createUser 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+      responses: 
+        201: 
+          description: User created successfully
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/responseUser'
+        400:
+          description: Invalid request data 
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error400'
+        409:
+          description: User already exists 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error409'
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+    get:
+      tags: 
+        - Users 
+      
+      summary: List all users 
+      description: Lists all registered users. Requires a valid JWT and administrator privileges. 
+      operationId: getUsers
+      security:
+        - JWTAuth: []
+      
+      responses: 
+        200:
+          description: Get users successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listUsers'
+        
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        403:
+          description: Access denied 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      
+      summary: Get user by id
+      description: Getting a user by id 
+      operationId: getUserById 
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true 
+          schema: 
+            type: integer 
+
+      responses:
+
+        200:
+          description: User founded 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseUser'
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        403:
+          description: Access denied 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        
+        404: 
+          description: User not founded 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+
+    put:
+      tags: 
+        - Users
+
+      summary: Update user 
+      description: Updating info users 
+      operationId: updateUser
+      security:
+        - JWTAuth: []
+      
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer 
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateUser'
+
+      responses: 
+
+        200:
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseUser'
+
+        400:
+          description: Invalid request data 
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error400'
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        403:
+          description: Access denied 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+
+        404: 
+          description: User not founded 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+
+    delete:
+      tags: 
+        - Users 
+
+      summary: Removing user 
+      description: Removing a user by id 
+      operationId: deleteUser 
+
+      security: 
+        - JWTAuth: []
+
+      parameters:
+        - in: path 
+          name: id 
+          required: true 
+          schema: 
+            type: integer 
+
+      responses: 
+
+        204: 
+          description: User removed successfully
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        403:
+          description: Access denied 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+
+        404: 
+          description: User not founded 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+
+      summary: Login 
+      description: Signing in...
+      operationId: login
+
+      requestBody: 
+        required: true 
+        content: 
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/userLogin'
+
+      responses: 
+
+        200: 
+          description: Login successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loginResponse'
+
+        400:
+          description: Invalid request data 
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error400'
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+  /auth/refresh:
+    post: 
+      tags: 
+        - Auth 
+
+      summary: Remade token 
+      description: Remade one token from a valid token 
+      operationId: refreshToken 
+
+      security:
+        - JWTAuth: []
+
+      responses: 
+        200:
+          description: Remade token with successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/remadeToken'
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+  
+  /accounts: 
+    post: 
+      tags: 
+        - Accounts
+      summary: Create a account 
+      description: Creating a account for one user. 
+      operationId: createAccount 
+
+      security: 
+      - JWTAuth : []
+
+      responses: 
+        201: 
+          description: Account created successfully
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/accountResponse'
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+    get: 
+      tags: 
+        - Accounts 
+      
+      summary: List accounts. 
+      description: Returns all accounts. Requires administrator privileges.
+      operationId: getAccounts
+
+      security:   
+        - JWTAuth: [] 
+
+      responses: 
+        200: 
+          description: Listing all accounts 
+          content:
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/listAccounts'
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        403:
+          description: Access denied 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /accounts/{id}:
+    get: 
+      tags: 
+      - Accounts
+
+      summary: Get account by id
+      description: Listing a user account 
+      operationId: getAccountById 
+
+      security: 
+        - JWTAuth: []
+
+      parameters: 
+        - in: path 
+          name: id 
+          required: true 
+          schema: 
+            type: integer 
+
+      responses: 
+
+        200: 
+          description: Account founded with successfully
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/accountResponse'
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        403:
+          description: Access denied 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+
+        404: 
+          description: User not founded 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /transactions:
+    get: 
+      tags: 
+        - Transactions
+      
+      summary: List user transactions 
+      description: List all the user transactions
+      operationId: getTransactions
+
+      security: 
+        - JWTAuth: [] 
+      
+      responses: 
+        200: 
+          description: List transactions successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listTransactions'
+              
+              examples: 
+                transactionsFound: 
+                  summary:  Transactions found 
+                  value: 
+                    - id: 1
+                      account_id: 1 
+                      type: deposit 
+                      amount: 100
+                      related_account_id: null 
+                      direction: in
+                noTransactions: 
+                  summary: No transactions found 
+                  value: []
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /transactions/deposit: 
+    post: 
+      tags:
+        - Transactions
+
+      summary: Make a deposit 
+      description: Deposits an amount into the specified account belonging to the authenticated user. 
+      operationId: deposit 
+
+      security: 
+        - JWTAuth: []
+
+      requestBody: 
+        required: true 
+        content: 
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/deposit'
+
+      responses: 
+
+        201: 
+          description: Balance refresh 
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/transactionResponse'
+
+        400:
+          description: Invalid request data 
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error400'
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        403:
+          description: Access denied 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+
+        404: 
+          description: User not founded 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /transactions/withdraw:
+    post: 
+      tags: 
+        - Transactions
+      
+      summary: Withdraw funds 
+      description: Withdraws an amount from the specified account, provided the account has sufficient funds and belongs to the authenticated user.
+      operationId: withdraw 
+
+      security: 
+        - JWTAuth: []
+      
+      requestBody: 
+        required: true 
+        content: 
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/deposit'
+
+      responses: 
+
+        201: 
+          description: Balance refresh 
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/transactionResponse'
+
+        400:
+          description: Invalid request data 
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error400'
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        403:
+          description: Access denied 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+
+        404: 
+          description: User not founded 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /transactions/transfer: 
+    post: 
+      tags: 
+        - Transactions 
+      
+      summary: Transaction funds 
+      description: Transfers an amount from the users account to a destination account. The source account must belong to the authenticated user.
+      operationId: transfer
+
+      security: 
+        - JWTAuth: []
+
+      requestBody: 
+        required: true 
+        content: 
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/transfer'
+      
+      responses:
+
+        201: 
+          description: Balance refresh 
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/transactionResponse'
+
+        400:
+          description: Invalid request data 
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error400'
+
+        401:
+          description: Invalid token  || Token type invalid || No authorized
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error401'
+
+        403:
+          description: Access denied 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+
+        404: 
+          description: User not founded 
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+        500:
+          description: Internal server Error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+
+
+# COMPONENTS --------------------------------------------------------------------------------------------------------------------------------
+components:
+  schemas:
+    createUser:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          minLength: 3
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+    
+    updateUser: 
+      type: object 
+      required: 
+        - name
+        - email 
+
+      properties: 
+        name: 
+          type: string 
+          minLength: 3 
+        
+        email: 
+          type: string 
+          format: email 
+
+    userLogin:
+      type: object
+      required: 
+        - email 
+        - password
+      
+      properties: 
+        email:
+          type: string 
+          format: email
+        password:
+          type: string 
+          minLength: 6
+
+
+
+    loginResponse: 
+      type: object
+      required: 
+        - token
+      properties: 
+        token: 
+          type: string 
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+
+    remadeToken: 
+      type: object 
+      required: 
+        - msg 
+      properties: 
+        msg: 
+          type: string 
+          example: 'Novo token gerado : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+      
+
+    listUsers:
+      type: array
+      items: 
+        $ref: '#/components/schemas/responseUser'
+
+    listAccounts: 
+      type: array
+      items: 
+        $ref: '#/components/schemas/accountResponse'
+    
+    listTransactions: 
+      type: array 
+      items: 
+        $ref: '#/components/schemas/transaction'
+
+    responseUser: 
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - role
+        - created_at
+        - updated_at
+      properties:
+        id: 
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Pedro
+        email:
+          type: string
+          format: email
+          example: pedro@email.com
+        role:
+          type: string 
+          enum:
+            - user
+            - admin
+          example: user
+        created_at:
+          type: string
+          format: date-time
+          example: '2026-10-14T15:30:00.000Z'
+        updated_at: 
+          type: string 
+          format: date-time 
+          example: '2026-10-14T15:30:00.000Z'
+
+    
+
+    
+    accountResponse: 
+      type: object
+      
+      required: 
+        - accountId
+        - userId
+        - balance
+        - created_at
+
+      properties: 
+        accountId: 
+          type: integer 
+          example: 1
+        
+        userId: 
+          type: integer 
+          example: 5
+
+        balance: 
+          type: number 
+          format: double
+          example: 00.00
+
+        created_at: 
+          type: string 
+          format: date-time 
+          example: '2026-10-14T15:30:00.000Z'
+
+    transaction: 
+      type: object 
+      required: 
+        - id
+        - account_id
+        - type
+        - amount 
+        - created_at 
+        - direction
+      
+      properties: 
+        id: 
+          type: integer 
+          example: 1 
+        
+        account_id: 
+          type: integer 
+          example: 5 
+        
+        type: 
+          type: string 
+          enum: [deposit, withdraw, transfer]
+          example: 'deposit'
+
+        amount:
+          type: number
+          format: double
+          example: 299.99
+        
+        related_account_id: 
+          type:
+            - integer 
+            - "null"
+          example: null
+        
+        created_at: 
+          type: string 
+          format: date-time
+          example: '2026-10-14T15:30:00.000Z'
+
+        direction: 
+          type: string 
+          enum: [in, out]
+          example: 'in'
+
+    deposit: 
+      type: object 
+      required: 
+        - account_id 
+        - amount 
+
+      properties: 
+        account_id: 
+          type: integer 
+          example: 3 
+
+        amount: 
+          type: number 
+          format: double 
+          example: 298.92
+
+    transactionResponse: 
+      type: object 
+      required: 
+        - balance
+
+      properties: 
+        balance: 
+          type: number
+          format: float 
+          example: 389.09
+
+    transfer: 
+      type: object
+      required: 
+        - account_id
+        - related_account_id 
+        - amount 
+
+      properties: 
+
+        account_id: 
+          type: integer 
+          example: 3 
+
+        related_account_id: 
+          type: integer 
+          example: 4
+        
+        amount: 
+          type: number 
+          format: double 
+          example: 298.92
+
+    
+
+
+
+    # Errors
+
+    Error400: 
+      type: object
+      required: 
+        - msg
+      properties:
+        msg:  
+          type: string 
+          example: 'Dados inválidos'
+    
+    Error401:
+      type: object 
+      required: 
+        - msg
+      properties: 
+        msg: 
+          type: string 
+          example: 'Não autorizado || Token inválido || Tipo de token inválido'
+
+    Error403:
+      type: object 
+      required: 
+        - msg 
+      properties: 
+        msg: 
+          type: string 
+          example: 'Acesso negado, sem permissão'
+    
+
+    Error404: 
+      type: object
+      required: 
+        - msg
+      properties: 
+        msg: 
+          type: string 
+          example: 'Usuário não encontrado'
+
+    Error409: 
+      type: object
+      required: 
+        - msg
+      properties: 
+        msg: 
+          type: string 
+          example: 'Usuário já cadastrado'
+
+    Error500: 
+      type: object
+      required: 
+        - msg
+      properties: 
+        msg: 
+          type: string 
+          example: 'Erro interno na API'
+    
+
+
+
+
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
