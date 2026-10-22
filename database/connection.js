@@ -2,11 +2,21 @@ const { Pool } = require('pg');
 
 const pool = new Pool(
     {
-        host: 'postgres', 
-        port: 5432, 
-        user: 'postgres', 
-        password: 'postgres', 
-        database: 'transactions'
+        host: process.env.DB_HOST || 'postgres', 
+        port: Number(process.env.DB_PORT || 5432), 
+        user: process.env.DB_USER || 'postgres', 
+        password: process.env.DB_PASSWORD || 'postgres', 
+        database: process.env.DB_NAME || 'transactions',
+
+
+
+        ...(process.env.DB_SSL === 'true' 
+            ? {ssl: {rejectUnauthorized : false}}
+            : {}
+        )
+
+
+
     }
 ); 
 
