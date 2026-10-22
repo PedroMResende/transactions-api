@@ -186,4 +186,5 @@ afterAll(async() => {
         WHERE email IN ('adminteste@email.com.br', 'joaodasneves@email.com.br')      
         `
     )
+
 })

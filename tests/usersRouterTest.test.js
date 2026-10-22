@@ -516,8 +516,7 @@ test('DELETE /users/:id (ADMIN ACCESS) |SHOULD RETURNS 204|', async() => {
 }); 
 
 
-afterAll(async() => {
-
+afterAll(async () => {
     await pool.query(
         `
         DELETE FROM users
