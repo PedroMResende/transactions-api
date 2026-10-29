@@ -8,6 +8,8 @@ info:
 servers:
   - url: http://localhost:3000
     description: Local development server
+  - url: https://transactions-api-17u4.onrender.com
+    description: Production server
 
 tags:
   - name: Auth
