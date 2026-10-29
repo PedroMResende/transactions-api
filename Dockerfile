@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # roda npm install no terminal
-RUN npm install 
+RUN npm ci --omit=dev 
 
 # Copia todos os arquivos que tão aqui e joga no app do container. 
 COPY . . 
