@@ -10,9 +10,6 @@ services:
     container_name: transactions-api
     restart: unless-stopped
 
-    env_file: 
-      - .env
-
 # faz um tunel entre a porta 3000 do meu servidor local, pra porta 3000 do container. Mapeia as portas. 
 # é a 3000 porque lá na construção da imagem eu coloquei o expose 3000, ele deixa essa porta exposta pra acessarem esse container
     ports:
